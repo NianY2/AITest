@@ -1,12 +1,12 @@
 # 简单的AI
 ## 介绍
-这是一个简单的AI
+这是一个简单静态的AI
 
 ## 技术选型
-# 主框架
+### 主框架
 Python3
 
-# 视图层
+### 视图层
 - PyQt5
 - PyQtWebEngine
 - Vue 3.5.13
@@ -45,6 +45,7 @@ python main.py
 ```
 
 ## 作者
+* Name: CY
 * QQ: 1871263099
 * 邮箱：1871263099@qq.com
 * CSDN博客：[https://blog.csdn.net/qq_59636442?type=blog](https://blog.csdn.net/qq_59636442?type=blog)
