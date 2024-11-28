@@ -1,3 +1,4 @@
+cd ..
 git remote rm origin
 @REM Gitee
 git remote add Gitee  https://gitee.com/REMOTE_CY/aitest.git

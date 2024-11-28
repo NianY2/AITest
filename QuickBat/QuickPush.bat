@@ -1,3 +1,4 @@
+cd ..
 git add .
 set /p var=CommitMessage:
 git commit -m %var%

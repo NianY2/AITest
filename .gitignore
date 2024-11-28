@@ -1,7 +1,12 @@
+user.json
+requirements_test.txt
+ChatAi.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
 
 # C extensions
 *.so

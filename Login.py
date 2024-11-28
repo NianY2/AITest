@@ -1,22 +1,29 @@
-import sys
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtWebEngineWidgets import *
+import json
+import  os
+from typing import Optional
 
-class MainWindow(QMainWindow):
+import  settings
+import  utils.Password as Password
+class Login():
+    isLosgin = False
+    user_data = None
     def __init__(self):
-        super(MainWindow, self).__init__()
-        self.setWindowTitle("登录")
-        self.setGeometry(5,30,1355,730) # 设置窗口的位置和大小（x, y, width, height）
-        self.browser=QWebEngineView()
-        # 加载本地的HTML界面
-        url=r'file:///./template/Login.html'
-        self.browser.load(QUrl(url))
-        self.setCentralWidget(self.browser)
+        with open(settings.USER_DATA_PATH, "r+") as f:
+            self.user_data = json.loads(f.read())
+
+    def register(self,sid, pwd,school):
+        """注册"""
+        print("注册",sid, pwd,school)
+
+    def login(self,sid:str, pwd:str)->(bool, Optional[dict]):
+        """登录"""
+        if sid in self.user_data:
+            encrypted_pwd = self.user_data[sid]["password"]
+            if Password.password_verify(pwd, encrypted_pwd):
+                return  True, self.user_data[sid]
+        else:
+            return False,None
 
 if __name__ == '__main__':
-    app=QApplication(sys.argv)  # 创建一个QApplication对象，sys.argv参数确保了命令行参数能够传递给应用程序
-    win=MainWindow()
-    win.show()
-    app.exit(app.exec_()) # 进入应用程序的主事件循环，直到应用程序退出。app.exec_()是一个阻塞调用，直到退出事件循环
-    print("程序退出")
+    print(Login().login("admin", "admin"))
+    print(Login().login("admin2", "pbkdf2"))

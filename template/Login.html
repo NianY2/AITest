@@ -3,11 +3,12 @@
 
 <head>
     <title>登入222</title>
-    <script src="./js/global/vue.global.js"></script>
+    <!-- <script src="./js/global/vue.global.js"></script> -->
     <link rel="stylesheet" href="./css/global/all.min.css">
     <link href="./css/global/css2.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/Login.css">
     <link rel="stylesheet" href="./css/global/global.css">
+    <script type="text/javascript" src="./js/global/qwebchannel.js"></script>
 </head>
 
 <body>
@@ -17,18 +18,19 @@
             <div class="shape"></div>
         </div>
         <div>
-            <form v-if="isLogin">
+            <!-- <form v-if="isLogin"> -->
+            <div class="form">
                 <h3>登录</h3>
                 <label for="username">学号</label>
                 <input type="text" placeholder="请输入学号" id="username">
                 <label for="password">密码</label>
                 <input type="password" placeholder="请输入密码" id="password">
-                <button>登录</button>
+                <button onclick="login()">登录</button>
                 <div class="social">
                     <div class="msg">还没有账号</div> <div class="btn" @click="isLogin = !isLogin">点击注册</div>
                 </div>
-            </form>
-            <form v-else>
+            </div>
+            <!-- <form v-else>
                 <h3>注册</h3>
                 <label for="username">学号</label>
                 <input type="text" placeholder="请输入学号" id="username">
@@ -38,9 +40,34 @@
                 <div class="social">
                     <div class="msg">以有账号</div> <div class="btn" @click="isLogin = !isLogin">返回登录</div>
                 </div>
-            </form>
+            </form> -->
         </div>
     </div>
-    <script src="./js/Login.js"></script>
+    <!-- <script src="./js/Login.js"></script> -->
+    <script>
+        var func = undefined;
+
+        window.onload = function () {
+            new QWebChannel(qt.webChannelTransport, function (channel) {
+                // 从channel中获取到我们注册到channel中的Factorial类对象
+                func = channel.objects.obj;
+            });
+        };
+
+        function login() {
+            username = document.getElementById("username").value;
+            password = document.getElementById("password").value;
+            data = {sid: username, pwd: password};
+            func.login(JSON.stringify(data),(result)=>{
+                result = JSON.parse(result);
+                if(result.err_code == 0){
+                    alert("登录成功");
+                }else{
+                    alert(result.msg);
+                    document.getElementById("password").value = "";
+                }
+            });
+        }
+    </script>
 </body>
 </html>
