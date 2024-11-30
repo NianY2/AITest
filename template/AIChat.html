@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI对话</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="./css/global/typeit_text.css">
+    <link rel="stylesheet" href="./css/AIChat.css">
+    <script src="./js/global/qwebchannel.js"></script>
+    <script src="./js/global/TypeitCY.js"></script>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2> <span id="title" class="typeit_text_css"></span></h2>
+        <button class="new-chat-btn" onclick="newChat()">新建聊天</button>
+        <ul class="chat-list" id="chat-list">
+            <!-- 示例聊天项 -->
+            <li class="chat-item" onclick="loadChat(this)" oncontextmenu="showDeleteMenu(event, this)">聊天 1<i
+                    class="fas fa-trash delete-icon" onclick="deleteChat(this.parentElement)"></i></li>
+            <li class="chat-item" onclick="loadChat(this)" oncontextmenu="showDeleteMenu(event, this)">聊天 2<i
+                    class="fas fa-trash delete-icon" onclick="deleteChat(this.parentElement)"></i></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="message-container" id="message-container">
+            <!-- 消息将在这里显示 -->
+        </div>
+        <div class="input-area">
+            <textarea class="input-field" id="input-field" placeholder="输入消息..."></textarea>
+            <button class="send-btn" onclick="sendMessage()">发送</button>
+        </div>
+    </div>
+    <script>
+        let messageContainer = null;
+        let new_chat = true;
+
+        window.onload = function () {
+            messageContainer = document.getElementById('message-container');
+
+            typeit({
+                select: '#title',
+                strings: ['你好', '欢迎使用CYAI'],
+                lifeLike: true,
+                loop: false
+            });
+
+            new QWebChannel(qt.webChannelTransport, function (channel) {
+                // 从channel中获取到我们注册到channel中的Factorial类对象
+                window.func = channel.objects.obj;
+                start_reply_cy() 
+            });
+
+            // 设置回车键
+            document.getElementById('input-field').addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        };
+        function start_reply_cy() {
+            window.func.start_reply_cy("", (result) => {
+                result = JSON.parse(result);
+                console.log(result);
+                addMessage(result.data.answer, 'ai');
+            })
+        }
+
+        let currentChat = null;
+        function newChat() {
+            new_chat = true;
+            document.getElementById('message-container').innerHTML = ''; // 清除之前的对话
+            start_reply_cy()
+        }
+
+
+        function newChatList(title){
+            const chatList = document.getElementById('chat-list');
+            const newChatItem = document.createElement('li');
+            newChatItem.className = 'chat-item';
+            newChatItem.textContent = title;
+            newChatItem.onclick = () => loadChat(newChatItem);
+            newChatItem.oncontextmenu = (event) => showDeleteMenu(event, newChatItem);
+            const deleteIcon = document.createElement('i');
+            deleteIcon.className = 'fas fa-trash delete-icon';
+            deleteIcon.onclick = () => deleteChat(newChatItem);
+            newChatItem.appendChild(deleteIcon);
+            chatList.appendChild(newChatItem);
+            loadChat(newChatItem);
+        }
+
+        function loadChat(chatItem) {
+            currentChat = chatItem.textContent;
+            document.getElementById('message-container').innerHTML = ''; // 清除之前的对话
+            chatItem.classList.add('active'); // 高亮选中的对话
+            Array.from(document.getElementsByClassName('chat-item')).forEach(item => {
+                if (item !== chatItem) {
+                    item.classList.remove('active');
+                }
+            });
+            window.func.get_chat_data_cy(currentChat, (result) => {
+                result = JSON.parse(result);
+                for (let i = 0; i < result.data.length; i++) {
+                    addMessage(result.data[i].content, result.data[i].type, false);
+                }
+            })
+        }
+
+        function sendMessage() {
+            const inputField = document.getElementById('input-field');
+            const messageText = inputField.value.trim();
+            if (!messageText) return;
+
+            addMessage(messageText, 'user');
+            generateAIResponse(messageText);
+            inputField.value = '';
+        }
+
+
+        function addMessage(text, type,typeit_text=true) {
+            // const messageContainer = document.getElementById('message-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `messageBox ${type}_messageBox`;
+            const messageSpan = document.createElement('span');
+            messageSpan.className = `message ${type}_message`;
+            messageDiv.appendChild(messageSpan);
+            messageContainer.appendChild(messageDiv);
+            if (type == 'ai' && typeit_text) {
+                // messageSpan.classList.add('typeit_text_css');
+                typeit({
+                    element: messageSpan,
+                    strings: [text],
+                    lifeLike: true,
+                    loop: false,
+                    min_speed: 0,
+                    max_speed: 100,
+                    max_line_length: 1,
+                    callback_one_txt: () => {
+                        messageContainer.scrollTop = messageContainer.scrollHeight; // 滚动到底部
+                    },
+                    callback: () => {
+                        messageContainer.scrollTop = messageContainer.scrollHeight; // 滚动到底部
+                    }
+                });
+            } else {
+                messageSpan.textContent = text;
+            }
+        }
+
+        function generateAIResponse(userMessage) {
+            data = {
+                key: userMessage,
+                num: 0
+            }
+            // 简单的回显机器人示例
+            window.func.chat_ai_cy(JSON.stringify(data), (result) => {
+                result = JSON.parse(result);
+                console.log(result);
+                addMessage(result.data.answer, 'ai');
+            });
+        }
+
+        function showDeleteMenu(event, chatItem) {
+            // 显示删除菜单
+            event.preventDefault();
+            const deleteIcon = chatItem.querySelector('.delete-icon');
+            deleteIcon.style.display = 'block';
+        }
+
+        function deleteChat(chatItem) {
+            chatItem.remove();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,6 +1,5 @@
-user.json
 requirements_test.txt
-ChatAi.json
+ProgramData
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

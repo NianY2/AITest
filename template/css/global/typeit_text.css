@@ -1,0 +1,25 @@
+.typeit_text_css{
+    display: inline-block;
+    position: relative;
+}
+
+/* 小光标 */
+.typeit_text_css::after{
+    content: '';
+    position: absolute;
+    right: -1px;
+    height: 15px;
+    width: 1px;
+    top: 40%;
+    transform: translateY(-50%);
+    background-color: #ece3e3;
+    animation: san 0.5s steps(1) infinite;
+}
+@keyframes san{
+    0%,100%{
+        background-color: #727272;
+    }
+    50%{
+       background-color: transparent;
+    }
+}

@@ -24,7 +24,9 @@
         };
 
         function callPythonFunction() {
-            func.print_message("Hello from JavaScript!",callback);
+            func.print_message("Hello from JavaScript!",(res)=>{
+                alert(res);
+            });
         }
     </script>
 </body>
