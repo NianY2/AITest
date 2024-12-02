@@ -2,11 +2,13 @@ import  os
 BATH_PATH =  os.getcwd()
 PROGRAM_DATA_PATH = os.path.join(BATH_PATH,"ProgramData")
 # 用户数据存放位置
-USER_DATA_PATH  = os.path.join(PROGRAM_DATA_PATH, 'user.json')
+USER_LIST_DATA_PATH  = os.path.join(PROGRAM_DATA_PATH, 'UserList.json')
 # 聊天机器人对话数据存放位置
 CHATAI_DATA_PATH = os.path.join(PROGRAM_DATA_PATH, 'ChatAi.json')
 # 登录数据存放位置
-LOGIN_DATA_PATH = os.path.join(PROGRAM_DATA_PATH, 'login.json')
+LOGIN_DATA_PATH = os.path.join(PROGRAM_DATA_PATH, 'Login.json')
+# 当前用户数据存放目录
+USER_DATA_PATH = os.path.join(PROGRAM_DATA_PATH, 'User')
 
 # AI 模糊匹配最小值
 MIN_AI_MATCH_VALUE = 80

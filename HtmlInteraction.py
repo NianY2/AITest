@@ -15,10 +15,11 @@ class HtmlInteraction(QObject):
         print(message)
         return "Test"
     @pyqtSlot(str, result=str)
-    def login(self, msg):
+    def login_cy(self, msg):
         """登入接口"""
+        login = Login()
         msg_data = json.loads(msg)
-        flag, data = Login().login(msg_data["sid"], msg_data["pwd"])
+        flag, data = login.login_cy(msg_data["sid"], msg_data["pwd"])
         if flag:
             return Rseponse.success(data,"登入成功")
         else:
@@ -28,7 +29,7 @@ class HtmlInteraction(QObject):
     def chat_ai_cy(self, msg):
         """聊天接口"""
         msg_data = json.loads(msg)
-        data = chat_ai.chat_cy(msg_data["key"],msg_data.get("num",0))
+        data = chat_ai.chat_cy(msg_data["key"],msg_data.get("num",0),msg_data.get("chat_index",0))
         re_data = {
             "flag":data[0],
             "answer":data[1],
@@ -49,13 +50,19 @@ class HtmlInteraction(QObject):
 
     @pyqtSlot(str,result=str)
     def get_chat_data_cy(self,msg):
-        """获取聊天记录"""
-        return Rseponse.success([
-            {"type":"ai","content":"欢迎使用CYChatAi,我现在可以回答研学、旅游、美食、健康方面的问题。"},
-            {"type":"user","content":"你好"},
-            {"type":"ai","content":"你好"},
-            {"type": "user", "content": "你好"},
-            {"type": "ai", "content": "你好"},
-            {"type": "user", "content": "你好"},
-            {"type": "ai", "content": "你好"}
-        ])
+        """获取某份聊天记录"""
+        msg_data = json.loads(msg)
+        index = msg_data.get("index",0)
+        print(chat_ai.get_chat_list_data_cy(index))
+        return Rseponse.success(chat_ai.get_chat_list_data_cy(index))
+    
+    @pyqtSlot(str,result=str)
+    def get_chat_list_title_cy(self):
+        return Rseponse.success(chat_ai.get_chat_list_title_cy())
+
+    @pyqtSlot(str,result=str)
+    def delete_chat_list_cy(self,msg):
+        msg_data = json.loads(msg)
+        index = msg_data.get("index",0)
+        chat_ai.delete_chat_list_cy(index)
+        return Rseponse.success()

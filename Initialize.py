@@ -9,13 +9,23 @@ def data_path_cy():
     """
     if not os.path.exists(settings.PROGRAM_DATA_PATH):
         os.mkdir(settings.PROGRAM_DATA_PATH)
-def user_data_cy():
+        print("创建程序数据文件夹成功")
+
+def user_data_path_cy():
+    """
+    判断保存用户数据文件夹是否存在，不存在则创建
+    """
+    if not os.path.exists(settings.USER_DATA_PATH):
+        os.mkdir(settings.USER_DATA_PATH)
+        print("创建用户数据文件夹成功")
+
+def user_list_data_cy():
     """
     文件 user.json
     """
     # 判断文件是否存在，不存在则创建
-    if not os.path.exists(settings.USER_DATA_PATH):
-        with open(settings.USER_DATA_PATH, "w+") as f:
+    if not os.path.exists(settings.USER_LIST_DATA_PATH):
+        with open(settings.USER_LIST_DATA_PATH, "w+") as f:
             for key in settings.DEFAULT_USER:
                 settings.DEFAULT_USER[key]["password"] = Password.password_encrypt(settings.DEFAULT_USER[key]["password"])
             f.write(json.dumps(settings.DEFAULT_USER))
@@ -29,8 +39,8 @@ def login_data_cy():
     if not os.path.exists(settings.LOGIN_DATA_PATH):
         with open(settings.LOGIN_DATA_PATH, "w+") as f:
             test_data = {
-                "isLosgin": True,
-                "uid": "admin",
+                "isLosgin": False,
+                "uid": None,
             }
             data = test_data
             f.write(json.dumps(data))
@@ -49,6 +59,7 @@ def chat_ai_data_cy():
 
 if __name__ == '__main__':
     data_path_cy()
-    user_data_cy()
+    user_data_path_cy()
+    user_list_data_cy()
     chat_ai_data_cy()
     login_data_cy()

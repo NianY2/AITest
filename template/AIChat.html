@@ -17,11 +17,6 @@
         <h2> <span id="title" class="typeit_text_css"></span></h2>
         <button class="new-chat-btn" onclick="newChat()">新建聊天</button>
         <ul class="chat-list" id="chat-list">
-            <!-- 示例聊天项 -->
-            <li class="chat-item" onclick="loadChat(this)" oncontextmenu="showDeleteMenu(event, this)">聊天 1<i
-                    class="fas fa-trash delete-icon" onclick="deleteChat(this.parentElement)"></i></li>
-            <li class="chat-item" onclick="loadChat(this)" oncontextmenu="showDeleteMenu(event, this)">聊天 2<i
-                    class="fas fa-trash delete-icon" onclick="deleteChat(this.parentElement)"></i></li>
         </ul>
     </div>
     <div class="main-content">
@@ -35,8 +30,10 @@
     </div>
     <script>
         let messageContainer = null;
+        let currentChat = null;
         let new_chat = true;
-
+        let now_index = 0;
+        let max_index = 0;
         window.onload = function () {
             messageContainer = document.getElementById('message-container');
 
@@ -50,7 +47,9 @@
             new QWebChannel(qt.webChannelTransport, function (channel) {
                 // 从channel中获取到我们注册到channel中的Factorial类对象
                 window.func = channel.objects.obj;
-                start_reply_cy() 
+                setChatList(()=>{
+                    newChat();
+                });
             });
 
             // 设置回车键
@@ -68,30 +67,48 @@
             })
         }
 
-        let currentChat = null;
+        /*
+        *新建聊天
+        */
         function newChat() {
             new_chat = true;
             document.getElementById('message-container').innerHTML = ''; // 清除之前的对话
+            // 删除active
+            const activeChatItems = document.querySelectorAll('.chat-item.active');
+            activeChatItems.forEach(item => {
+                item.classList.remove('active');
+            });
+
+            now_index = max_index+1
             start_reply_cy()
         }
 
-
-        function newChatList(title){
+        
+        /*
+        *在聊天列表开头中添加新的聊天
+        */
+        function newChatList(title,index) {
             const chatList = document.getElementById('chat-list');
             const newChatItem = document.createElement('li');
             newChatItem.className = 'chat-item';
             newChatItem.textContent = title;
-            newChatItem.onclick = () => loadChat(newChatItem);
+            newChatItem.onclick = () => {loadChat(newChatItem,index)};
             newChatItem.oncontextmenu = (event) => showDeleteMenu(event, newChatItem);
             const deleteIcon = document.createElement('i');
             deleteIcon.className = 'fas fa-trash delete-icon';
-            deleteIcon.onclick = () => deleteChat(newChatItem);
+            deleteIcon.onclick = () => {deleteChat(newChatItem,index)};
             newChatItem.appendChild(deleteIcon);
-            chatList.appendChild(newChatItem);
-            loadChat(newChatItem);
+            if(index == now_index){
+                newChatItem.classList.add('active');
+            } 
+            chatList.insertBefore(newChatItem,chatList.firstChild);
         }
 
-        function loadChat(chatItem) {
+        /*
+        *选择聊天
+        */
+        function loadChat(chatItem,index) {
+            now_index = index
             currentChat = chatItem.textContent;
             document.getElementById('message-container').innerHTML = ''; // 清除之前的对话
             chatItem.classList.add('active'); // 高亮选中的对话
@@ -100,14 +117,31 @@
                     item.classList.remove('active');
                 }
             });
-            window.func.get_chat_data_cy(currentChat, (result) => {
+            rq_data = {index}
+            window.func.get_chat_data_cy(JSON.stringify(rq_data), (result) => {
                 result = JSON.parse(result);
+                console.log(result);
                 for (let i = 0; i < result.data.length; i++) {
                     addMessage(result.data[i].content, result.data[i].type, false);
                 }
             })
         }
-
+        /**
+         * 设置聊天列表
+         * */
+        function setChatList(callback=null) {
+            const chatList = document.getElementById('chat-list');
+            chatList.innerHTML = '';
+            window.func.get_chat_list_title_cy("", (result) => {
+                result = JSON.parse(result);
+                max_index = result.data.length-1
+                alert(max_index)
+                for (let i = 0; i < result.data.length; i++) {
+                    newChatList(result.data[i], i);
+                }
+                callback && callback();
+            })
+        }
         function sendMessage() {
             const inputField = document.getElementById('input-field');
             const messageText = inputField.value.trim();
@@ -116,6 +150,7 @@
             addMessage(messageText, 'user');
             generateAIResponse(messageText);
             inputField.value = '';
+            setChatList();
         }
 
 
@@ -135,7 +170,7 @@
                     lifeLike: true,
                     loop: false,
                     min_speed: 0,
-                    max_speed: 100,
+                    max_speed: 200,
                     max_line_length: 1,
                     callback_one_txt: () => {
                         messageContainer.scrollTop = messageContainer.scrollHeight; // 滚动到底部
@@ -149,12 +184,15 @@
             }
         }
 
+        /**
+         * 生成AI回复
+         * */
         function generateAIResponse(userMessage) {
             data = {
                 key: userMessage,
-                num: 0
+                num: 0,
+                chat_index: now_index
             }
-            // 简单的回显机器人示例
             window.func.chat_ai_cy(JSON.stringify(data), (result) => {
                 result = JSON.parse(result);
                 console.log(result);
@@ -169,8 +207,14 @@
             deleteIcon.style.display = 'block';
         }
 
-        function deleteChat(chatItem) {
-            chatItem.remove();
+        function deleteChat(chatItem,index) {
+            // 删除聊天
+            data = {index}
+            window.func.delete_chat_list_cy(JSON.stringify(data), (result) => {
+                result = JSON.parse(result);
+                console.log(result);
+                setChatList();
+            });
         }
     </script>
 </body>
