@@ -1,4 +1,6 @@
 import  json
+from os import mkdir
+
 import  settings
 from  Login import  Login
 from fuzzywuzzy import process
@@ -64,6 +66,7 @@ class ChatAi:
         login = Login()
         data = login.login_user_data["chat_data_list"][index]
         date = "".join(data['create_date'].split(":"))
+
         with open(f"{login.login_user['uid']}-{date}.txt", "w+",encoding="utf8") as file:
             for i in data["data"]:
                 file.write(f"{i['type']:<5}{i['content']}\n")
