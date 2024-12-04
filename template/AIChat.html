@@ -135,7 +135,7 @@
             window.func.get_chat_list_title_cy("", (result) => {
                 result = JSON.parse(result);
                 max_index = result.data.length-1
-                alert(max_index)
+
                 for (let i = 0; i < result.data.length; i++) {
                     newChatList(result.data[i], i);
                 }

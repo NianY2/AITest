@@ -58,11 +58,23 @@ class HtmlInteraction(QObject):
     
     @pyqtSlot(str,result=str)
     def get_chat_list_title_cy(self):
+        """获取聊天记录标题列表"""
         return Rseponse.success(chat_ai.get_chat_list_title_cy())
 
     @pyqtSlot(str,result=str)
     def delete_chat_list_cy(self,msg):
+        """删除聊天记录"""
         msg_data = json.loads(msg)
         index = msg_data.get("index",0)
         chat_ai.delete_chat_list_cy(index)
         return Rseponse.success()
+
+    @pyqtSlot(str,result=str)
+    def keep_chat_data_cy(self,msg):
+        """保存聊天记录"""
+        msg_data = json.loads(msg)
+        index = msg_data.get("index",0)
+        if chat_ai.keep_chat_data_cy(index):
+            return Rseponse.success()
+        else:
+            return Rseponse.fail("保存失败")

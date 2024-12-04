@@ -25,7 +25,7 @@ def user_list_data_cy():
     """
     # 判断文件是否存在，不存在则创建
     if not os.path.exists(settings.USER_LIST_DATA_PATH):
-        with open(settings.USER_LIST_DATA_PATH, "w+") as f:
+        with open(settings.USER_LIST_DATA_PATH, "w+",encoding="utf8") as f:
             for key in settings.DEFAULT_USER:
                 settings.DEFAULT_USER[key]["password"] = Password.password_encrypt(settings.DEFAULT_USER[key]["password"])
             f.write(json.dumps(settings.DEFAULT_USER))
@@ -37,7 +37,7 @@ def login_data_cy():
     """
     # 判断文件是否存在，不存在则创建
     if not os.path.exists(settings.LOGIN_DATA_PATH):
-        with open(settings.LOGIN_DATA_PATH, "w+") as f:
+        with open(settings.LOGIN_DATA_PATH, "w+",encoding="utf8") as f:
             test_data = {
                 "isLosgin": False,
                 "uid": None,
@@ -52,7 +52,7 @@ def chat_ai_data_cy():
     """
     # 判断文件是否存在，不存在则创建
     if not os.path.exists(settings.CHATAI_DATA_PATH):
-        with open(settings.CHATAI_DATA_PATH, "w+") as f:
+        with open(settings.CHATAI_DATA_PATH, "w+",encoding="utf8") as f:
             f.write(json.dumps(settings.DEFAULT_CHATAI))
             print("创建默认ChatAi数据成功")
 

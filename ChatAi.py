@@ -11,7 +11,7 @@ class ChatAi:
         self.chat_ai_question = list(self.chat_ai_data.keys())
 
     def get_chat_ai_data_cy(self):
-        with open(settings.CHATAI_DATA_PATH, "r") as f:
+        with open(settings.CHATAI_DATA_PATH, "r",encoding="utf8") as f:
             return json.loads(f.read())
 
     def chat_cy(self,key,num=0,index=0):
@@ -60,12 +60,22 @@ class ChatAi:
         login = Login()
         login.delete_chat_data_cy(index)
 
+    def keep_chat_data_cy(self,index):
+        login = Login()
+        data = login.login_user_data["chat_data_list"][index]
+        date = "".join(data['create_date'].split(":"))
+        with open(f"{login.login_user['uid']}-{date}.txt", "w+",encoding="utf8") as file:
+            for i in data["data"]:
+                file.write(f"{i['type']:<5}{i['content']}\n")
+
+
 
 if __name__ == '__main__':
     chat =  ChatAi()
-    for k,v in enumerate(chat.get_chat_list_title_cy()):
-        print(k,v)
-        print(chat.get_chat_list_data_cy(k))
+    chat.keep_chat_data_cy(0)
+    # for k,v in enumerate(chat.get_chat_list_title_cy()):
+    #     print(k,v)
+    #     print(chat.get_chat_list_data_cy(k))
     # flag = True
     # num = 0
     # while next:

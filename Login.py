@@ -1,4 +1,4 @@
-import json,os
+import json,os,datetime
 from typing import Optional
 import  settings
 import  utils.Password as Password
@@ -62,13 +62,13 @@ class Login():
             }
             self.save_login_user_data_cy()
         else:
-            with open(login_user_data, "r+") as f:
+            with open(login_user_data, "r+",encoding="utf8") as f:
                 self.login_user_data = json.loads(f.read())
 
     def save_login_user_data_cy(self):
         """保存登入用户数据"""
         login_user_data = os.path.join(settings.USER_DATA_PATH,f"{self.login_user['uid']}.json")
-        with open(login_user_data, "w+") as f:
+        with open(login_user_data, "w+",encoding="utf8") as f:
             f.write(json.dumps(self.login_user_data))
 
     
@@ -78,9 +78,12 @@ class Login():
             print(f"添加聊天记录{content}")
             self.login_user_data["chat_data_list"].append({
                 "title": content,
+                "create_date":datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "update_date":datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "data": [{"type": "ai", "content": settings.START_REPLY},{"type": type, "content": content}]
             })
         else:
+            self.login_user_data["chat_data_list"][index]["update_date"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             self.login_user_data["chat_data_list"][index]["data"].append({"type": type, "content": content})
         self.save_login_user_data_cy()
 
