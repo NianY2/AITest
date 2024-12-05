@@ -96,7 +96,10 @@
             newChatItem.oncontextmenu = (event) => showDeleteMenu(event, newChatItem);
             const deleteIcon = document.createElement('i');
             deleteIcon.className = 'fas fa-trash delete-icon';
-            deleteIcon.onclick = () => {deleteChat(newChatItem,index)};
+            deleteIcon.onclick = (event) => {
+                event.stopPropagation();
+                deleteChat(newChatItem,index)
+            };
             newChatItem.appendChild(deleteIcon);
             if(index == now_index){
                 newChatItem.classList.add('active');
