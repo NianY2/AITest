@@ -1,6 +1,8 @@
 import  json
 from os import mkdir
-
+import os
+import tkinter  
+from tkinter import filedialog
 import  settings
 from  Login import  Login
 from fuzzywuzzy import process
@@ -66,10 +68,26 @@ class ChatAi:
         login = Login()
         data = login.login_user_data["chat_data_list"][index]
         date = "".join(data['create_date'].split(":"))
-
-        with open(f"{login.login_user['uid']}-{date}.txt", "w+",encoding="utf8") as file:
+        date = "-".join(date.split(" "))
+        try:
+            # 选择文件夹
+            root = tkinter.Tk()
+            root.withdraw() # 隐藏主窗口
+            flies_path = filedialog.askdirectory() # 选择文件夹路径
+            print(flies_path)
+        except Exception as e:
+            print("选择文件夹失败")
+            print(e)
+            return False
+        if flies_path == "":
+            print("选择文件夹失败")
+            return False
+        flie_path = os.path.join(flies_path,f"{login.login_user['uid']}-{date}.txt")
+        with open(flie_path, "w+",encoding="utf8") as file:
             for i in data["data"]:
                 file.write(f"{i['type']:<5}{i['content']}\n")
+        os.startfile(flies_path)
+        return True
 
 
 

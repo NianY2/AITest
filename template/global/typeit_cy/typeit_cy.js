@@ -3,13 +3,13 @@
  * (select和element只能选择一个)
  * @param {Object} options - 配置选项
  * @param {string} options.select - 选择器，用于定位要显示文本的DOM元素("#id"或".class")
- * @param {string} options.element - DOM元素（Element对象）
+ * @param {Object} options.element - DOM元素（Element对象）
  * @param {string[]} options.strings - 要依次显示的字符串数组
  * @param {boolean} [options.lifeLike=true] - 是否模拟真实打字速度
  * @param {boolean} [options.loop=true] - 是否循环显示字符串
  * @param {number} [options.min_speed=200] - 最小打字速度（毫秒）
  * @param {number} [options.max_speed=500] - 最大打字速度（毫秒）
- * @param {string} [options.callback_one_txt=null] - 每个字符打字结束后的回调函数
+ * @param {Function} [options.callback_one_txt=null] - 每个字符打字结束后的回调函数
  * @param {Function} [options.callback=null] - 打字结束后的回调函数(不循环时有效)
  * 
  */

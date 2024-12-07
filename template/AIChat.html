@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI对话</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="./css/global/typeit_text.css">
+    <link rel="stylesheet" href="./dist/layui/css/layui.css">
+    <script src="./dist/layui/layui.js"></script>
     <link rel="stylesheet" href="./css/AIChat.css">
-    <script src="./js/global/qwebchannel.js"></script>
-    <script src="./js/global/TypeitCY.js"></script>
+    <script src="./dist/qwebchannel.js"></script>
+    <link rel="stylesheet" href="./global/typeit_cy/typeit_cy.css">
+    <script src="./global/typeit_cy/typeit_cy.js"></script>
 </head>
 
 <body>
@@ -101,6 +103,13 @@
                 deleteChat(newChatItem,index)
             };
             newChatItem.appendChild(deleteIcon);
+            const downIcon = document.createElement('i');
+            downIcon.className = 'fas fa-file file-icon';
+            downIcon.onclick = (event) => {
+                event.stopPropagation();
+                downChat(index)
+            };
+            newChatItem.appendChild(downIcon);
             if(index == now_index){
                 newChatItem.classList.add('active');
             } 
@@ -164,6 +173,9 @@
             const messageSpan = document.createElement('span');
             messageSpan.className = `message ${type}_message`;
             messageDiv.appendChild(messageSpan);
+            if(type == "ai"){
+                
+            }
             messageContainer.appendChild(messageDiv);
             if (type == 'ai' && typeit_text) {
                 // messageSpan.classList.add('typeit_text_css');
@@ -211,13 +223,29 @@
         }
 
         function deleteChat(chatItem,index) {
-            // 删除聊天
+            layer.confirm('确定删除这个聊天？', {icon: 3}, function(){
+                data = {index}
+                window.func.delete_chat_list_cy(JSON.stringify(data), (result) => {
+                    result = JSON.parse(result);
+                    console.log(result);
+                    setChatList();
+                    layer.msg('删除成功');
+                });
+            }, function(){
+                // layer.msg('点击取消的回调');
+            });
+        }
+        function downChat(index) {
             data = {index}
-            window.func.delete_chat_list_cy(JSON.stringify(data), (result) => {
+            window.func.keep_chat_data_cy(JSON.stringify(data), (result) => {
                 result = JSON.parse(result);
                 console.log(result);
-                setChatList();
-            });
+                if(result.err_code == 0){
+                    layer.msg('保存成功');
+                }else{
+                    layer.msg('保存失败');
+                }
+            })
         }
     </script>
 </body>
