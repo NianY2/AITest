@@ -39,7 +39,7 @@ def login_data_cy():
     if not os.path.exists(settings.LOGIN_DATA_PATH):
         with open(settings.LOGIN_DATA_PATH, "w+",encoding="utf8") as f:
             test_data = {
-                "isLosgin": False,
+                "is_login": False,
                 "uid": None,
             }
             data = test_data

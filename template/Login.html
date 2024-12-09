@@ -1,73 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
-    <title>登入222</title>
-    <!-- <script src="./js/global/vue.global.js"></script> -->
-    <link rel="stylesheet" href="./css/global/all.min.css">
-    <link href="./css/global/css2.css" rel="stylesheet">
-    <link rel="stylesheet" href="./css/Login.css">
-    <link rel="stylesheet" href="./css/global/global.css">
-    <script type="text/javascript" src="./js/global/qwebchannel.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录</title>
+  <link rel="stylesheet" href="./css/Login.css">
+  <script src="./dist/qwebchannel.js"></script>
+  <link rel="stylesheet" href="./dist/layui/css/layui.css">
+  <script src="./dist/layui/layui.js"></script>
 </head>
 
 <body>
-    <div id="app">
-        <div class="background">
-            <div class="shape"></div>
-            <div class="shape"></div>
-        </div>
-        <div>
-            <!-- <form v-if="isLogin"> -->
-            <div class="form">
-                <h3>登录</h3>
-                <label for="username">学号</label>
-                <input type="text" placeholder="请输入学号" id="username">
-                <label for="password">密码</label>
-                <input type="password" placeholder="请输入密码" id="password">
-                <button onclick="login()">登录</button>
-                <div class="social">
-                    <div class="msg">还没有账号</div> <div class="btn" @click="isLogin = !isLogin">点击注册</div>
-                </div>
-            </div>
-            <!-- <form v-else>
-                <h3>注册</h3>
-                <label for="username">学号</label>
-                <input type="text" placeholder="请输入学号" id="username">
-                <label for="password">密码</label>
-                <input type="password" placeholder="请输入密码" id="password">
-                <button>注册</button>
-                <div class="social">
-                    <div class="msg">以有账号</div> <div class="btn" @click="isLogin = !isLogin">返回登录</div>
-                </div>
-            </form> -->
-        </div>
-    </div>
-    <!-- <script src="./js/Login.js"></script> -->
-    <script>
-        var func = undefined;
+  <div class="svg-top">
+    <?xml version="1.0" encoding="utf-8"?>
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="1337"
+      width="1337">
+      <defs>
+        <path id="path-1" opacity="1" fill-rule="evenodd"
+          d="M1337,668.5 C1337,1037.455193874239 1037.455193874239,1337 668.5,1337 C523.6725684305388,1337 337,1236 370.50000000000006,1094 C434.03835568300906,824.6732385973953 6.906089672974592e-14,892.6277623047779 0,668.5000000000001 C0,299.5448061257611 299.5448061257609,1.1368683772161603e-13 668.4999999999999,0 C1037.455193874239,0 1337,299.544806125761 1337,668.5Z" />
+        <linearGradient id="linearGradient-2" x1="0.79" y1="0.62" x2="0.21" y2="0.86">
+          <stop offset="0" stop-color="rgb(88,62,213)" stop-opacity="1" />
+          <stop offset="1" stop-color="rgb(23,215,250)" stop-opacity="1" />
+        </linearGradient>
+      </defs>
+      <g opacity="1">
+        <use xlink:href="#path-1" fill="url(#linearGradient-2)" fill-opacity="1" />
+      </g>
+    </svg>
+  </div>
+  <div class="svg-bottom">
+    <?xml version="1.0" encoding="utf-8"?>
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="896"
+      width="967.8852157128662">
+      <defs>
+        <path id="path-2" opacity="1" fill-rule="evenodd"
+          d="M896,448 C1142.6325445712241,465.5747656464056 695.2579309733121,896 448,896 C200.74206902668806,896 5.684341886080802e-14,695.2579309733121 0,448.0000000000001 C0,200.74206902668806 200.74206902668791,5.684341886080802e-14 447.99999999999994,0 C695.2579309733121,0 475,418 896,448Z" />
+        <linearGradient id="linearGradient-3" x1="0.5" y1="0" x2="0.5" y2="1">
+          <stop offset="0" stop-color="rgb(40,175,240)" stop-opacity="1" />
+          <stop offset="1" stop-color="rgb(18,15,196)" stop-opacity="1" />
+        </linearGradient>
+      </defs>
+      <g opacity="1">
+        <use xlink:href="#path-2" fill="url(#linearGradient-3)" fill-opacity="1" />
+      </g>
+    </svg>
+  </div>
 
-        window.onload = function () {
-            new QWebChannel(qt.webChannelTransport, function (channel) {
-                // 从channel中获取到我们注册到channel中的Factorial类对象
-                func = channel.objects.obj;
-            });
-        };
+  <section class="container">
+    <section class="wrapper">
+      <header>
+        <div class="logo">
+          <span>Logo</span>
+        </div>
+        <h1 id="form-title">欢迎回来！</h1>
+      </header>
+      <section class="main-content">
+        <div id="login-form">
+          <input type="text" id="sid" placeholder="学号">
+          <div class="line"></div>
+          <input type="password" id="pwd" placeholder="密码">
+          <button onclick="login()">登录</button>
+        </div>
+        <div id="register-form" style="display: none;">
+          <input type="text" id="register-school" placeholder="学校" value="广州商学院">
+          <div class="line"></div>
+          <input type="text" id="register-sid" placeholder="学号">
+          <div class="line"></div>
+          <input type="text" id="register-name" placeholder="姓名">
+          <div class="line"></div>
+          <input type="password" id="register-pwd" placeholder="密码">
+          <div class="line"></div>
+          <input type="password" id="register-pwd2" placeholder="确认密码">
+          <button onclick="register()">注册</button>
+        </div>
+      </section>
+      <footer>
+        <p id="forget" onclick="resetPwd(event)">忘记密码？</p>
+        <p id="toggle-login" onclick="toggleLogin(event)">注册</p>
+      </footer>
+    </section>
+  </section>
 
-        function login() {
-            username = document.getElementById("username").value;
-            password = document.getElementById("password").value;
-            data = {sid: username, pwd: password};
-            func.login(JSON.stringify(data),(result)=>{
-                result = JSON.parse(result);
-                if(result.err_code == 0){
-                    alert("登录成功");
-                }else{
-                    alert(result.msg);
-                    document.getElementById("password").value = "";
-                }
-            });
+  <script>
+    let isLogin = true;
+    function toggleLogin(event=null) {
+      event && event.preventDefault();
+      if (isLogin) {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('register-form').style.display = 'none';
+        document.getElementById('form-title').textContent = '欢迎回来！';
+        document.getElementById('toggle-login').innerHTML = '注册';
+      } else {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('register-form').style.display = 'block';
+        document.getElementById('form-title').textContent = '新用户注册';
+        document.getElementById('toggle-login').innerHTML = '登录';
+      }
+      isLogin = !isLogin;
+    }
+
+    window.onload = function () {
+      new QWebChannel(qt.webChannelTransport, function (channel) {
+        // 从channel中获取到我们注册到channel中的Factorial类对象
+        window.func = channel.objects.obj;
+      });
+      // 监听回车键
+      document.onkeydown = function(event){
+        if (event.key === 'Enter') {
+          if(isLogin){
+            login();
+          }else{
+            register();
+          }
         }
-    </script>
+			}
+    }
+    function resetPwd(event) {
+      event.preventDefault();
+      layer.msg('请联系管理员重置密码');
+    }
+    function register() {
+      const sid = document.getElementById('register-sid').value;
+      const name = document.getElementById('register-name').value;
+      const pwd = document.getElementById('register-pwd').value;
+      const pwd2 = document.getElementById('register-pwd2').value;
+      const school = document.getElementById('register-school').value;
+      if( sid == '' || pwd == '' || pwd2 == '' || school == '' || name == '') {
+        layer.msg('信息不能为空');
+        return;
+      }else if(pwd != pwd2){
+        layer.msg('两次密码不一致');
+        return;
+      }
+      const data = {sid, pwd, pwd2, school , name};
+      window.func.register_cy(JSON.stringify(data), (result) => {
+        result = JSON.parse(result);
+        console.log(result);
+        if(result.err_code == 0){
+          layer.msg('注册成功');
+          toggleLogin();
+          document.getElementById('sid').value = document.getElementById('register-sid').value;
+          document.getElementById('register-sid').value = '';
+          document.getElementById('register-pwd').value = '';
+          document.getElementById('register-pwd2').value = ''; 
+        }else{
+          layer.msg(result.msg);
+        }
+      })
+    }
+    function login() {
+      const sid = document.getElementById('sid').value;
+      const pwd = document.getElementById('pwd').value;
+      if (sid == '' || pwd == '') {
+        layer.msg('学号或密码不能为空');
+        return;
+      }
+      const data = {sid, pwd};
+      window.func.login_cy(JSON.stringify(data), (result) => {
+        result = JSON.parse(result);
+        console.log(result);
+        if(result.err_code == 0){
+          layer.msg('登入成功');
+        }else{
+          layer.msg(result.msg);
+          document.getElementById('pwd').value = '';
+        }
+      })
+    }
+  </script>
 </body>
 </html>

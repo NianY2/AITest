@@ -3,8 +3,8 @@
 """
 class Test():
     @property
-    def isLosgin(self):
+    def is_login(self):
         return  False
 
 if __name__ == '__main__':
-    print(Test().isLosgin)
+    print(Test().is_login)

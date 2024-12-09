@@ -8,12 +8,10 @@ Initialize.login_data_cy()
 
 print("======================程序初始化完成======================")
 
-# 模拟登入
-from Login import Login
-login = Login()
-flag,_ = login.login_cy("admin", "admin")
-if flag:
-    print("======================登录成功======================")
+import utils.glo as glo
+glo._init()
+print("=====================全局变量初始化完成=====================")
+
 
 import sys
 from MainGUI import MainWindow

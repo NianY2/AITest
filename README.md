@@ -8,14 +8,6 @@
 - Ai聊天
   - 模糊匹配问题
 
-## 学习
-Python
-- PyQt5控件QWebEngineView:[https://blog.csdn.net/qq_59636442/article/details/144061937](https://blog.csdn.net/qq_59636442/article/details/144061937)
-- pyinstaller的打包Python(包含静态文件）:[https://blog.csdn.net/qq_59636442/article/details/144071283](https://blog.csdn.net/qq_59636442/article/details/144071283)
-前端
-- Vue3实现打字机效果：[https://blog.csdn.net/qq_59636442/article/details/130504479](https://blog.csdn.net/qq_59636442/article/details/130504479)
-- 
-
 ## 目录结构
 - QuickBat(git脚本，与程序无关)
 - Test(学习过程的测试代码，与程序无关)
@@ -23,15 +15,6 @@ Python
 - Initialize(初始化程序，生成数据文件)
 - settings.py(项目设置文件)
 - main.py(主程序)
-
-## 项目技术栈
-### 主框架
-Python3
-
-### 视图层
-- PyQt5
-- PyQtWebEngine
-- Vue 3.5.13
 
 
 ## 常用命令
@@ -83,5 +66,3 @@ python main.py
 * Github:[https://github.com/NianY2](https://github.com/NianY2)
 * GitCode[https://gitcode.com/qq_59636442](https://gitcode.com/qq_59636442)
 
-## 引用
-- 登入界面模板:[https://codepen.io/fghty/pen/PojKNEG](https://codepen.io/fghty/pen/PojKNEG)

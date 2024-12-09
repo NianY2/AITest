@@ -1,5 +1,5 @@
 class AI:
-    isLosgin = False
+    is_login = False
     user = {"202212390606":'123'}
     lt_map = {
         "1":"111",
@@ -21,7 +21,7 @@ class AI:
         mm = input("mm:")
         if zh in self.user:
             return  self.user[zh] == mm
-        self.isLosgin = True
+        self.is_login = True
 
     def lt(self):
         msg = input("请输入你的问题：")

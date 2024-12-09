@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI对话</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="./dist/layui/css/layui.css">
     <script src="./dist/layui/layui.js"></script>
     <link rel="stylesheet" href="./css/AIChat.css">
@@ -20,6 +19,7 @@
         <button class="new-chat-btn" onclick="newChat()">新建聊天</button>
         <ul class="chat-list" id="chat-list">
         </ul>
+        <button class="logout-btn" onclick="logout()">退出登录</button>
     </div>
     <div class="main-content">
         <div class="message-container" id="message-container">
@@ -31,6 +31,7 @@
         </div>
     </div>
     <script>
+        let user_data = null;
         let messageContainer = null;
         let currentChat = null;
         let new_chat = true;
@@ -39,27 +40,33 @@
         window.onload = function () {
             messageContainer = document.getElementById('message-container');
 
-            typeit({
-                select: '#title',
-                strings: ['你好', '欢迎使用CYAI'],
-                lifeLike: true,
-                loop: false
-            });
+
 
             new QWebChannel(qt.webChannelTransport, function (channel) {
                 // 从channel中获取到我们注册到channel中的Factorial类对象
                 window.func = channel.objects.obj;
-                setChatList(()=>{
+                setChatList(() => {
                     newChat();
                 });
+                // 用户信息
+                window.func.user_data_cy("", (result) => {
+                    result = JSON.parse(result);
+                    console.log(result);
+                    user_data = result.data;
+                    typeit({
+                        select: '#title',
+                        strings: [`你好${user_data.name}`, '欢迎使用CYAI',`你好${user_data.name},欢迎使用CYAI`],
+                        lifeLike: true,
+                        loop: false
+                    });
+                })
             });
-
             // 设置回车键
-            document.getElementById('input-field').addEventListener('keydown', function (event) {
+            document.onkeydown = function (event) {
                 if (event.key === 'Enter') {
                     sendMessage();
                 }
-            });
+            }
         };
         function start_reply_cy() {
             window.func.start_reply_cy("", (result) => {
@@ -81,45 +88,48 @@
                 item.classList.remove('active');
             });
 
-            now_index = max_index+1
+            now_index = max_index + 1
             start_reply_cy()
         }
 
-        
+
         /*
         *在聊天列表开头中添加新的聊天
         */
-        function newChatList(title,index) {
+        function newChatList(title, index) {
             const chatList = document.getElementById('chat-list');
             const newChatItem = document.createElement('li');
             newChatItem.className = 'chat-item';
             newChatItem.textContent = title;
-            newChatItem.onclick = () => {loadChat(newChatItem,index)};
+            newChatItem.onclick = () => { loadChat(newChatItem, index) };
             newChatItem.oncontextmenu = (event) => showDeleteMenu(event, newChatItem);
             const deleteIcon = document.createElement('i');
-            deleteIcon.className = 'fas fa-trash delete-icon';
+            
+            deleteIcon.className = 'layui-icon layui-icon-delete delete-icon';
+            deleteIcon.style.fontSize = '23px';
             deleteIcon.onclick = (event) => {
                 event.stopPropagation();
-                deleteChat(newChatItem,index)
+                deleteChat(newChatItem, index)
             };
             newChatItem.appendChild(deleteIcon);
             const downIcon = document.createElement('i');
-            downIcon.className = 'fas fa-file file-icon';
+            downIcon.className = 'layui-icon layui-icon-export file-icon';
+            downIcon.style.fontSize = deleteIcon.style.fontSize;
             downIcon.onclick = (event) => {
                 event.stopPropagation();
                 downChat(index)
             };
             newChatItem.appendChild(downIcon);
-            if(index == now_index){
+            if (index == now_index) {
                 newChatItem.classList.add('active');
-            } 
-            chatList.insertBefore(newChatItem,chatList.firstChild);
+            }
+            chatList.insertBefore(newChatItem, chatList.firstChild);
         }
 
         /*
         *选择聊天
         */
-        function loadChat(chatItem,index) {
+        function loadChat(chatItem, index) {
             now_index = index
             currentChat = chatItem.textContent;
             document.getElementById('message-container').innerHTML = ''; // 清除之前的对话
@@ -129,7 +139,7 @@
                     item.classList.remove('active');
                 }
             });
-            rq_data = {index}
+            rq_data = { index }
             window.func.get_chat_data_cy(JSON.stringify(rq_data), (result) => {
                 result = JSON.parse(result);
                 console.log(result);
@@ -141,12 +151,12 @@
         /**
          * 设置聊天列表
          * */
-        function setChatList(callback=null) {
+        function setChatList(callback = null) {
             const chatList = document.getElementById('chat-list');
             chatList.innerHTML = '';
             window.func.get_chat_list_title_cy("", (result) => {
                 result = JSON.parse(result);
-                max_index = result.data.length-1
+                max_index = result.data.length - 1
 
                 for (let i = 0; i < result.data.length; i++) {
                     newChatList(result.data[i], i);
@@ -166,15 +176,15 @@
         }
 
 
-        function addMessage(text, type,typeit_text=true) {
+        function addMessage(text, type, typeit_text = true) {
             // const messageContainer = document.getElementById('message-container');
             const messageDiv = document.createElement('div');
             messageDiv.className = `messageBox ${type}_messageBox`;
             const messageSpan = document.createElement('span');
             messageSpan.className = `message ${type}_message`;
             messageDiv.appendChild(messageSpan);
-            if(type == "ai"){
-                
+            if (type == "ai") {
+
             }
             messageContainer.appendChild(messageDiv);
             if (type == 'ai' && typeit_text) {
@@ -222,30 +232,46 @@
             deleteIcon.style.display = 'block';
         }
 
-        function deleteChat(chatItem,index) {
-            layer.confirm('确定删除这个聊天？', {icon: 3}, function(){
-                data = {index}
+        function deleteChat(chatItem, index) {
+            layer.alert('确定删除这个聊天？', { skin: 'layui-layer-win10', shade: 0.01, btn: ['确定', '取消'] }, function () {
+                data = { index }
                 window.func.delete_chat_list_cy(JSON.stringify(data), (result) => {
                     result = JSON.parse(result);
                     console.log(result);
                     setChatList();
                     layer.msg('删除成功');
                 });
-            }, function(){
+            }, function () {
                 // layer.msg('点击取消的回调');
             });
         }
         function downChat(index) {
-            data = {index}
+            data = { index }
             window.func.keep_chat_data_cy(JSON.stringify(data), (result) => {
                 result = JSON.parse(result);
                 console.log(result);
-                if(result.err_code == 0){
+                if (result.err_code == 0) {
                     layer.msg('保存成功');
-                }else{
+                } else {
                     layer.msg('保存失败');
                 }
             })
+        }
+        function logout() {
+            layer.alert('确定要退出登录？', { skin: 'layui-layer-win10', shade: 0.01, btn: ['确定', '取消'] }, function () {
+                window.func.logout_cy("", (result) => {
+                result = JSON.parse(result);
+                console.log(result);
+                if (result.err_code == 0) {
+                    layer.msg('退出成功');
+                } else {
+                    layer.msg('退出失败');
+                }
+            })
+            }, function () {
+                // layer.msg('点击取消的回调');
+            });
+
         }
     </script>
 </body>

@@ -1,5 +1,5 @@
 import json,os,datetime
-from typing import Optional
+
 import  settings
 import  utils.Password as Password
 
@@ -11,21 +11,25 @@ class Login():
         self.get_user_list_data_cy()
         self.get_login_data_cy()
 
-    def register_cy(self,sid, pwd,school):
+    def register_cy(self,sid, pwd,school,name):
         """注册"""
-        print("注册",sid, pwd,school)
+        if sid in self.user_list_data:
+            return False,"用户已存在"
+        self.user_list_data[sid] = {"uid":sid,"password":Password.password_encrypt(pwd), "school":school,"name":name}
+        self.save_user_list_data_cy()
+        return True,self.user_list_data[sid]
 
-    def login_cy(self,sid:str, pwd:str)->(bool, Optional[dict]):
+    def login_cy(self,sid, pwd):
         """登录"""
         if sid in self.user_list_data:
             encrypted_pwd = self.user_list_data[sid]["password"]
             if Password.password_verify(pwd, encrypted_pwd):
-                self.login_data = {"isLosgin":True,"uid":sid}
+                self.login_data = {"is_login":True,"uid":sid}
                 self.save_login_data_cy()
                 self.get_login_user_data_cy()
                 return  True, self.user_list_data[sid]
         else:
-            return False,None
+            return False,"用户不存在"
 
     def get_user_list_data_cy(self):
         """获取用户数据"""
@@ -41,7 +45,7 @@ class Login():
         """获取登录数据"""
         with open(settings.LOGIN_DATA_PATH, "r+") as f:
             self.login_data = json.loads(f.read())
-        if self.login_data.get('isLosgin'):
+        if self.login_data.get('is_login'):
             self.get_login_user_data_cy()
 
 
@@ -92,9 +96,16 @@ class Login():
         self.login_user_data["chat_data_list"].pop(index)
         self.save_login_user_data_cy()
 
+    def logout_cy(self):
+        """退出登录"""
+        self.login_data = {"is_login":False}
+        self.save_login_data_cy()
+
+    
     @property
-    def isLosgin(self):
-        return self.login_data.get('isLosgin',False)
+    def is_login(self):
+        return self.login_data.get('is_login',False)
+    
     @property
     def login_user(self):
         uid = self.login_data.get('uid')

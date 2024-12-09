@@ -4,7 +4,7 @@ from PyQt5.QtCore import QObject, pyqtSlot
 from utils.Response import  Rseponse
 from Login import Login
 from ChatAi import ChatAi
-
+import  utils.glo as glo
 chat_ai = ChatAi()
 class HtmlInteraction(QObject):
     """
@@ -21,10 +21,21 @@ class HtmlInteraction(QObject):
         msg_data = json.loads(msg)
         flag, data = login.login_cy(msg_data["sid"], msg_data["pwd"])
         if flag:
+            glo.get_value('update_page')("AIChat")
             return Rseponse.success(data,"登入成功")
         else:
             return Rseponse.fail("账号密码错误")
-
+    @pyqtSlot(str, result=str)
+    def register_cy(self, msg):
+        """注册接口"""
+        login = Login()
+        msg_data = json.loads(msg)
+        flag, data = login.register_cy(sid=msg_data["sid"], pwd=msg_data["pwd"], school=msg_data["school"],name=msg_data["name"])
+        if flag:
+            return Rseponse.success(data,"注册成功")
+        else:
+            return Rseponse.fail("注册失败")
+        
     @pyqtSlot(str, result=str)
     def chat_ai_cy(self, msg):
         """聊天接口"""
@@ -78,3 +89,17 @@ class HtmlInteraction(QObject):
             return Rseponse.success()
         else:
             return Rseponse.fail("保存失败")
+        
+    @pyqtSlot(str,result=str)
+    def user_data_cy(self):
+        """获取用户数据"""
+        login = Login()
+        return Rseponse.success(login.login_user)
+    
+    @pyqtSlot(str,result=str)
+    def logout_cy(self):
+        """退出登录"""
+        login = Login()
+        login.logout_cy()
+        glo.get_value('update_page')("login")
+        return Rseponse.success()
