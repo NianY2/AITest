@@ -24,16 +24,17 @@ class ChatAi:
         :return:
         (是否有匹配结果,回答内容，是否有下一个)
         """
-        flag, question, next = self.mathch_question_cy(key,num)
+        flag, question, next,other_question_list = self.mathch_question_cy(key,num)
+        # print("other_question_list",other_question_list)
         login = Login()
         login.add_chat_data_cy(index,"user",key)
         if flag:
             print(f"匹配成功，问题：{question}，回答为：{self.chat_ai_data[question]}")
             login.add_chat_data_cy(index,"ai",self.chat_ai_data[question])
-            return True,self.chat_ai_data[question],next
+            return True,self.chat_ai_data[question],next,other_question_list
         else:
             login.add_chat_data_cy(index,"ai",settings.DEFAULT_REPLY)
-            return False,settings.DEFAULT_REPLY,False
+            return False,settings.DEFAULT_REPLY,False,other_question_list
 
     def mathch_question_cy(self,key,num=0):
         """
@@ -45,11 +46,11 @@ class ChatAi:
         question = process.extract(key, self.chat_ai_question)
         print(f"问题：{key},匹配结果：{question}")
         if question[num][1] < settings.MIN_AI_MATCH_VALUE:
-            return False,None,False
+            return False,None,False,question
         next = False
         if len(question)-1 > num and question[num+1][1] > settings.MIN_AI_MATCH_VALUE:
             next = True
-        return True,question[num][0],next
+        return True,question[num][0],next,question
 
     def get_chat_list_title_cy(self):
         login = Login()

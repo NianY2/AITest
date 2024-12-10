@@ -25,9 +25,14 @@
         <div class="message-container" id="message-container">
             <!-- 消息将在这里显示 -->
         </div>
-        <div class="input-area">
-            <textarea class="input-field" id="input-field" placeholder="输入消息..."></textarea>
-            <button class="send-btn" onclick="sendMessage()">发送</button>
+        <div class="input-box">
+            <div class="input-area">
+                <textarea class="input-field" id="input-field" placeholder="输入消息..."></textarea>
+                <button class="send-btn" onclick="sendMessage()">发送</button>
+            </div>
+            <div class="other-question-box" id="other-question-box">
+                你可能想问：<span class="other-question" onclick="sendMessage('你好')">你好</span>
+            </div>
         </div>
     </div>
     <script>
@@ -67,6 +72,9 @@
                     sendMessage();
                 }
             }
+            // 隐藏你可能想问
+            remove_other_question()
+
         };
         function start_reply_cy() {
             window.func.start_reply_cy("", (result) => {
@@ -164,8 +172,12 @@
                 callback && callback();
             })
         }
-        function sendMessage() {
+        function sendMessage(msg = null) {
             const inputField = document.getElementById('input-field');
+            if(msg != null){
+                inputField.value = msg
+            }
+            
             const messageText = inputField.value.trim();
             if (!messageText) return;
 
@@ -183,9 +195,7 @@
             const messageSpan = document.createElement('span');
             messageSpan.className = `message ${type}_message`;
             messageDiv.appendChild(messageSpan);
-            if (type == "ai") {
 
-            }
             messageContainer.appendChild(messageDiv);
             if (type == 'ai' && typeit_text) {
                 // messageSpan.classList.add('typeit_text_css');
@@ -218,10 +228,22 @@
                 num: 0,
                 chat_index: now_index
             }
+            remove_other_question()
             window.func.chat_ai_cy(JSON.stringify(data), (result) => {
                 result = JSON.parse(result);
                 console.log(result);
                 addMessage(result.data.answer, 'ai');
+                other_question_list =  result.data.other_question_list
+                if(result.data.flag == true){
+                    result.data.other_question_list.splice(0,1)
+                }else{
+                    result.data.other_question_list.splice(4,1)
+                }
+                result.data.other_question_list.splice(3,1)
+                for (let index = 0; index < other_question_list.length; index++) {
+                    const li = other_question_list[index];
+                    add_other_question(li[0])
+                }
             });
         }
 
@@ -272,6 +294,18 @@
                 // layer.msg('点击取消的回调');
             });
 
+        }
+        function remove_other_question(){
+            let questions =  document.getElementsByClassName("other-question")
+            while( questions.length != 0){
+                questions[0].remove()
+            }
+            document.getElementById("other-question-box").style.visibility = "hidden"
+        }
+        function  add_other_question(question){
+            let  box = document.getElementById("other-question-box");
+            box.style.visibility = ""
+            box.innerHTML+=`<span class="other-question" onclick="sendMessage('${question}')">${question}</span>`
         }
     </script>
 </body>

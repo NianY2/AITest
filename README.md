@@ -23,9 +23,9 @@
 pip freeze > requirements_test.txt
 # 打包
 #“-F”效果是打包成一个文件，“-w”则可以使打包后的程序运行时不弹出黑窗口
-pyinstaller -F -w Login.py
+pyinstaller -F -w main.py
 # 按照 spec文件打包
-pyinstaller  Login.spec
+pyinstaller  main.spec
 ```
 
 
@@ -37,6 +37,12 @@ pyinstaller  Login.spec
 - pyinstaller(将Python代码打包成exe文件)
 
 ## 使用方法
+### 更新pip
+存在`module 'pkgutil' has no attribute 'ImpImporter'. Did you mean: 'zipimporter'?`报错时
+```shell
+py -m ensurepip --upgrade 
+```
+
 ### 下载依赖
 ```shell
 pip install --index-url=https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt

@@ -44,7 +44,8 @@ class HtmlInteraction(QObject):
         re_data = {
             "flag":data[0],
             "answer":data[1],
-            "next":data[2]
+            "next":data[2],
+            "other_question_list": data[3]
         }
         return Rseponse.success(re_data)
 

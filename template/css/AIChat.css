@@ -76,6 +76,7 @@ body {
 .new-chat-btn:hover {
     background-color: #0056b3;
 }
+
 .logout-btn {
     background-color: #ff5722;
     color: white;
@@ -92,6 +93,7 @@ body {
 .logout-btn:hover {
     background-color: #912200;
 }
+
 .chat-list {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -135,7 +137,7 @@ body {
 .delete-icon {
     position: absolute;
     top: 50%;
-    transform: translate(0,-50%);
+    transform: translate(0, -50%);
     right: 10px;
     cursor: pointer;
     display: none;
@@ -144,13 +146,14 @@ body {
 .file-icon {
     position: absolute;
     top: 50%;
-    transform: translate(0,-50%);
+    transform: translate(0, -50%);
     right: 40px;
     cursor: pointer;
     display: none;
 }
 
-.chat-item:hover .delete-icon,.chat-item:hover .file-icon {
+.chat-item:hover .delete-icon,
+.chat-item:hover .file-icon {
     display: block;
 }
 
@@ -158,11 +161,12 @@ body {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    max-height: 100vh;
     background-color: #f4f4f9;
 }
 
 .message-container {
+    padding: 20px;
     flex-grow: 1;
     max-height: calc(100vh - 150px);
     overflow-y: auto;
@@ -189,7 +193,13 @@ body {
 .ai_messageBox {
     background-color: #ffffff;
     align-self: flex-start;
-    
+
+}
+
+.input-box {
+    box-shadow: -5px -2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 20px;
 }
 
 .input-area {
@@ -217,4 +227,23 @@ body {
 
 .send-btn:hover {
     background-color: #0056b3;
+}
+
+.other-question-box {
+    padding: 10px;
+    /* 不可选择 */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    word-break: break-all;
+}
+
+.other-question-box span {
+    padding: 0 10px;
+    line-height: 40px;
+    background-color: #dfdfdf;
+    border-radius: 10px;
+    margin-left: 10px;
 }
