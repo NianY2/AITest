@@ -39,14 +39,11 @@
         let user_data = null;
         let messageContainer = null;
         let currentChat = null;
-        let new_chat = true;
+        let new_chat = false;
         let now_index = 0;
         let max_index = 0;
         window.onload = function () {
             messageContainer = document.getElementById('message-container');
-
-
-
             new QWebChannel(qt.webChannelTransport, function (channel) {
                 // 从channel中获取到我们注册到channel中的Factorial类对象
                 window.func = channel.objects.obj;
@@ -88,6 +85,10 @@
         *新建聊天
         */
         function newChat() {
+            if (new_chat) {
+                layer.msg('当前已经是新的聊天啦，快开始聊天吧');
+                return
+            }
             new_chat = true;
             document.getElementById('message-container').innerHTML = ''; // 清除之前的对话
             // 删除active
@@ -173,6 +174,7 @@
             })
         }
         function sendMessage(msg = null) {
+            newChat = false
             const inputField = document.getElementById('input-field');
             if(msg != null){
                 inputField.value = msg

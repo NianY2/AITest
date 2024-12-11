@@ -24,7 +24,8 @@ class HtmlInteraction(QObject):
             glo.get_value('update_page')("AIChat")
             return Rseponse.success(data,"登入成功")
         else:
-            return Rseponse.fail("账号密码错误")
+            return Rseponse.fail(data)
+            
     @pyqtSlot(str, result=str)
     def register_cy(self, msg):
         """注册接口"""
@@ -34,7 +35,7 @@ class HtmlInteraction(QObject):
         if flag:
             return Rseponse.success(data,"注册成功")
         else:
-            return Rseponse.fail("注册失败")
+            return Rseponse.fail(data)
         
     @pyqtSlot(str, result=str)
     def chat_ai_cy(self, msg):

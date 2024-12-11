@@ -41,6 +41,7 @@ def login_data_cy():
             test_data = {
                 "is_login": False,
                 "uid": None,
+                "login_time": []
             }
             data = test_data
             f.write(json.dumps(data))

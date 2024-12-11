@@ -21,16 +21,59 @@ class Login():
 
     def login_cy(self,sid, pwd):
         """登录"""
+        is_max,flag = self.is_max_try_cy()
+        if is_max:return False,flag
         if sid in self.user_list_data:
             encrypted_pwd = self.user_list_data[sid]["password"]
             if Password.password_verify(pwd, encrypted_pwd):
-                self.login_data = {"is_login":True,"uid":sid}
+                self.login_data = {"is_login":True,"uid":sid,"login_time":[]}
                 self.save_login_data_cy()
                 self.get_login_user_data_cy()
                 return  True, self.user_list_data[sid]
+            else:
+                self.add_login_time_cy()
+                n = settings.LOGIN_TRY_NUM - len(self.login_data["login_time"])
+                is_max,flag = self.is_max_try_cy()
+                if is_max:return False,flag
+                if settings.DEBUG:
+                    return False,"账号或密码错误，还剩"+str(n)+"次机会"
+                else:
+                    return False,"账号或密码错误"
         else:
-            return False,"用户不存在"
+            self.add_login_time_cy()
+            n = settings.LOGIN_TRY_NUM - len(self.login_data["login_time"])
+            is_max,flag = self.is_max_try_cy()
+            if is_max:return False,flag
+            if settings.DEBUG:
+                return False,"账号或密码错误，还剩"+str(n)+"次机会"
+            else:
+                return False,"账号或密码错误"
+            
+    
+    def is_max_try_cy(self):
+        """验证是否达到最大尝试次数"""
+        self.clear_login_time_cy()
+        #  验证是否达到最大尝试次数
+        if len(self.login_data["login_time"]) >= settings.LOGIN_TRY_NUM:
+            wait_time = datetime.datetime.now() - datetime.datetime.strptime(self.login_data["login_time"][0],"%Y-%m-%d %H:%M:%S")
+            wait_time_seconds = settings.LOGIN_TRY_INTERVAL - (wait_time.seconds + wait_time.days * 24 * 3600)
+            return True,f"已达到最大尝试次数，请{wait_time_seconds}秒后再试"
+        return False,None
 
+    def clear_login_time_cy(self):
+        # 遍历时间间隔，如果间隔大于LOGIN_TRY_INTERVAL，删除之前的时间
+        for i in range(len(self.login_data["login_time"])-1,-1,-1):
+            wait_time = datetime.datetime.now() - datetime.datetime.strptime(self.login_data["login_time"][i],"%Y-%m-%d %H:%M:%S")
+            wait_time_seconds = settings.LOGIN_TRY_INTERVAL - (wait_time.seconds + wait_time.days * 24 * 3600)
+            if wait_time_seconds <= 0:
+                self.login_data["login_time"].pop(i)
+
+
+    def add_login_time_cy(self):
+        """记录登入失败时间"""
+        self.login_data["login_time"].append(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        self.save_login_data_cy()
+    
     def get_user_list_data_cy(self):
         """获取用户数据"""
         with open(settings.USER_LIST_DATA_PATH, "r+") as f:
@@ -98,7 +141,7 @@ class Login():
 
     def logout_cy(self):
         """退出登录"""
-        self.login_data = {"is_login":False}
+        self.login_data = {"is_login":False,"uid":None,"login_time":[]}
         self.save_login_data_cy()
 
     
@@ -110,6 +153,8 @@ class Login():
     def login_user(self):
         uid = self.login_data.get('uid')
         return self.user_list_data[uid]
+
+    
 
 if __name__ == '__main__':
     print(Login().login_cy("admin", "admin"))

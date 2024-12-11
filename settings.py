@@ -1,4 +1,9 @@
 import  os
+"""
+测试模式
+1. 会提示登入错误次数
+"""
+DEBUG = True
 BATH_PATH =  os.getcwd()
 # 静态资源文件
 # files_settings
@@ -19,6 +24,14 @@ LOGIN_DATA_PATH = os.path.join(PROGRAM_DATA_PATH, 'Login.json')
 USER_DATA_PATH = os.path.join(PROGRAM_DATA_PATH, 'User')
 
 
+# 最大登录尝试次数
+LOGIN_TRY_NUM = 3
+"""
+登录尝试间隔时间(单位：秒) 
+计算规则：
+在该时间内，登录尝试次数到达最大次数时，不允许登录
+"""
+LOGIN_TRY_INTERVAL = 60*10
 
 # 默认用户
 DEFAULT_USER = {
