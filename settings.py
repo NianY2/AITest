@@ -45,7 +45,20 @@ MIN_AI_MATCH_VALUE = 80
 DEFAULT_REPLY = "我暂时听不懂这个问题耶，换个问题问我吧。"
 # DEFAULT_REPLY = "我暂时听不懂这个问题耶，可以主动添加这个问题的回答哦。"
 # 启动回复
-START_REPLY = "欢迎使用CYChatAi,我现在可以回答研学、旅游、美食、健康方面的问题。"
+START_REPLY = """欢迎使用CYChatAi,我现在可以回答研学、旅游、美食、健康方面的问题。
+输入<strong class="text-question" onclick="sendMessage('代码模式')">代码模式</strong>可以让我进入代码模式。"""
+
+# 代码模式启动回复
+CODE_REPLY = """进入代码模式成功，我目前支持执行<i>Python</i>代码。
+在代码模式下，输入<strong class="text-question" onclick="sendMessage('exit')">exit</strong>或<strong class="text-question" onclick="sendMessage('退出')">退出</strong>可以退出代码模式。
+<strong>注意：</strong>在代码模式下，所有输入都会尝试在真实环境中执行，需要确保你的代码是安全的。否则可能对你的计算机造成<strong>不可逆的损害。</strong>
+"""
+
+# 代码模式退出回复
+CODE_EXIT_REPLY = """退出代码模式成功。现在可以正常对话。"""
+
+# 代码模式默认回复
+CODE_DEFAULT_REPLY = "输入的内容可能不是有效的代码，无法执行。"
 
 # 默认聊天机器人对话数据
 import DEFAULT_CHATAI as DEFAULT_CHATAI_DATA

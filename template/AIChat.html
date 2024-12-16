@@ -140,6 +140,7 @@
         */
         function loadChat(chatItem, index) {
             now_index = index
+            new_chat = false
             currentChat = chatItem.textContent;
             document.getElementById('message-container').innerHTML = ''; // 清除之前的对话
             chatItem.classList.add('active'); // 高亮选中的对话
@@ -197,27 +198,33 @@
             const messageSpan = document.createElement('span');
             messageSpan.className = `message ${type}_message`;
             messageDiv.appendChild(messageSpan);
-
             messageContainer.appendChild(messageDiv);
             if (type == 'ai' && typeit_text) {
-                // messageSpan.classList.add('typeit_text_css');
+               
                 typeit({
                     element: messageSpan,
                     strings: [text],
                     lifeLike: true,
                     loop: false,
                     min_speed: 0,
-                    max_speed: 200,
-                    max_line_length: 1,
+                    max_speed: 50,
                     callback_one_txt: () => {
                         messageContainer.scrollTop = messageContainer.scrollHeight; // 滚动到底部
                     },
                     callback: () => {
+                        messageSpan.innerHTML ="<pre class='content'>"+text+"</pre>" 
                         messageContainer.scrollTop = messageContainer.scrollHeight; // 滚动到底部
                     }
                 });
-            } else {
-                messageSpan.textContent = text;
+            } else if(type == 'ai'){
+                messageSpan.innerHTML ="<pre class='content'>"+text+"</pre>" 
+                
+            }else {
+                // 在messageSpan内添加pre标签
+                const  pre = document.createElement('pre');
+                pre.className = 'content';
+                pre.textContent = text;
+                messageSpan.appendChild(pre);
             }
         }
 

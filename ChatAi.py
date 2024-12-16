@@ -6,13 +6,21 @@ from tkinter import filedialog
 import  settings
 from  Login import  Login
 from fuzzywuzzy import process,fuzz
-
+from utils import  PythonCode
 class ChatAi:
     chat_ai_data = {}
     chat_ai_question = []
+    # 是否为代码模式
+    is_code = False
     def __init__(self):
         self.chat_ai_data = self.get_chat_ai_data_cy()
         self.chat_ai_question = list(self.chat_ai_data.keys())
+    
+
+    def exit_code_mode(self):
+        # 退出代码模式
+        self.is_code = False
+        print("==============================退出代码模式==============================")
 
     def get_chat_ai_data_cy(self):
         with open(settings.CHATAI_DATA_PATH, "r",encoding="utf8") as f:
@@ -24,18 +32,51 @@ class ChatAi:
         :return:
         (是否有匹配结果,回答内容，是否有下一个)
         """
-        flag, question, next,other_question_list = self.mathch_question_cy(key,num)
-        # print("other_question_list",other_question_list)
+        print(key)
+        if key == "代码模式":
+            print("==============================进入代码模式==============================")
+            self.is_code = True
+            flag = True
+            ans  = settings.CODE_REPLY
+            next = False
+            other_question_list = [("exit",100),("exit",100),("退出",100)]
+            
+        elif self.is_code and (key == "退出" or key == "exit"):
+            self.exit_code_mode()
+            flag = True
+            ans  = settings.CODE_EXIT_REPLY
+            next = False
+            other_question_list = [("代码模式",100),("代码模式",100),("你好",100)]
+            
+        
+        elif self.is_code:
+            flag = True
+            next = False
+            other_question_list = [("exit",100),("exit",100),("退出",100)]
+            try:
+                ans = f"""
+提供的代码片段是一个有效的Python代码片段
+输出结果为：
+{PythonCode.get_python_code_result(key)}
+"""
+            except PythonCode.NoPythonCodeError as e:
+                ans = settings.CODE_DEFAULT_REPLY
+            except Exception as e:
+                ans = "这段代码发生了错误，错误信息为："+str(e)
+            
+        else:
+            flag, question, next,other_question_list = self.mathch_question_cy(key,num)
+            ans = self.chat_ai_data[question]
+            print(f"匹配成功，问题：{question}，回答为：{ans}")
         login = Login()
         login.add_chat_data_cy(index,"user",key)
         if flag:
-            print(f"匹配成功，问题：{question}，回答为：{self.chat_ai_data[question]}")
-            login.add_chat_data_cy(index,"ai",self.chat_ai_data[question])
-            return True,self.chat_ai_data[question],next,other_question_list
+            login.add_chat_data_cy(index,"ai",ans)
+            return True,ans,next,other_question_list
         else:
             login.add_chat_data_cy(index,"ai",settings.DEFAULT_REPLY)
             return False,settings.DEFAULT_REPLY,False,other_question_list
-
+        
     def mathch_question_cy(self,key,num=0):
         """
         匹配问题
@@ -95,6 +136,7 @@ class ChatAi:
 if __name__ == '__main__':
     chat =  ChatAi()
     chat.keep_chat_data_cy(0)
+    print([i for i in range(10)])
     # for k,v in enumerate(chat.get_chat_list_title_cy()):
     #     print(k,v)
     #     print(chat.get_chat_list_data_cy(k))

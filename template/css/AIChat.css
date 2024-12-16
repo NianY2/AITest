@@ -251,3 +251,14 @@ body {
     border-radius: 10px;
     margin-left: 10px;
 }
+.text-question{
+    /* 小手 */
+    cursor: pointer;
+    /* 链接颜色 */
+    color: #007bff;
+    /* 不可选择 */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

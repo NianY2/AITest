@@ -47,7 +47,7 @@ function typeit({select=null,element=null, strings, lifeLike = true, loop = fals
     function nextStep() {
         if (huan) {
             // 给.text标签添加字符，用.slice方法
-            text_dom.innerHTML = strings[xiaBiao].slice(0, ++index);
+            text_dom.innerText = strings[xiaBiao].slice(0, ++index);
             // 如果当前字符串的所有字符都已显示，则开始删除字符
             if (index === strings[xiaBiao].length) {
                 // 如果数组下标超过了最后一个字符串且不循环，则停止定时器
@@ -61,7 +61,7 @@ function typeit({select=null,element=null, strings, lifeLike = true, loop = fals
             }
         } else {
             // 给.text标签删除字符，用.slice方法
-            text_dom.innerHTML = strings[xiaBiao].slice(0, index--);
+            text_dom.innerText  = strings[xiaBiao].slice(0, index--);
             // 如果所有字符都已删除，则准备显示下一个字符串
             if (index < 0) {
                 index = 0;
