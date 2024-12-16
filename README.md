@@ -11,8 +11,7 @@
 - 登录注册
   - 密码加密：使用PBKDF2_SHA256加密
   - 用户信息长久保存
-  - 每10分钟只能登入3次---
-  - 弱密码验证---
+  - 每10分钟只能登入3次
   
 - Ai聊天
   - 对话信息长久保存
@@ -46,7 +45,7 @@ pyinstaller  main.spec
 - PyQt5(构建界面)
 - PyQtWebEngine(通过WebView构建界面)
 - FuzzyWuzzy(字符串的模糊匹配)
-- python-levenshtein(Levenshtein距离的计算,FuzzyWuzzy需要)
+- python-levenshtein(Levenshtein距离的计算,提高计算的速度,FuzzyWuzzy需要)
 - pyinstaller(将Python代码打包成exe文件)
 
 ## 使用方法

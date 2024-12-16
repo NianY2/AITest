@@ -36,12 +36,12 @@
         </div>
     </div>
     <script>
-        let user_data = null;
-        let messageContainer = null;
-        let currentChat = null;
-        let new_chat = false;
-        let now_index = 0;
-        let max_index = 0;
+        var user_data = null;
+        var messageContainer = null;
+        var currentChat = null;
+        var new_chat = false;
+        var now_index = 0;
+        var max_index = 0;
         window.onload = function () {
             messageContainer = document.getElementById('message-container');
             new QWebChannel(qt.webChannelTransport, function (channel) {
@@ -174,7 +174,7 @@
             })
         }
         function sendMessage(msg = null) {
-            newChat = false
+            new_chat = false
             const inputField = document.getElementById('input-field');
             if(msg != null){
                 inputField.value = msg

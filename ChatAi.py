@@ -5,7 +5,7 @@ import tkinter
 from tkinter import filedialog
 import  settings
 from  Login import  Login
-from fuzzywuzzy import process
+from fuzzywuzzy import process,fuzz
 
 class ChatAi:
     chat_ai_data = {}
