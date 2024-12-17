@@ -66,7 +66,10 @@ class ChatAi:
             
         else:
             flag, question, next,other_question_list = self.mathch_question_cy(key,num)
-            ans = self.chat_ai_data[question]
+            if flag:
+                ans = self.chat_ai_data[question]
+            else:
+                ans = settings.DEFAULT_REPLY
             print(f"匹配成功，问题：{question}，回答为：{ans}")
         login = Login()
         login.add_chat_data_cy(index,"user",key)
