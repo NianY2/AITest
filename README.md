@@ -21,7 +21,8 @@
   - 保存聊天记录
   - 代码模式（运行Python代码）
   - 显示文章
-  
+  - 使用讯飞大模型（支持上下文对话）
+
 ## 目录结构
 - QuickBat(git脚本，与程序无关)
 - Test(学习过程的测试代码，与程序无关)
@@ -29,7 +30,6 @@
 - Initialize(初始化程序，生成数据文件)
 - settings.py(项目设置文件)
 - main.py(主程序)
-
 
 ## 常用命令
 ```shell
@@ -49,6 +49,7 @@ pyinstaller  main.spec
 - FuzzyWuzzy(字符串的模糊匹配)
 - python-levenshtein(Levenshtein距离的计算,提高计算的速度,FuzzyWuzzy需要)
 - pyinstaller(将Python代码打包成exe文件)
+- openai(使用大模型)
 
 ## 使用方法
 ### 更新pip
@@ -68,6 +69,7 @@ pip install --index-url=https://mirrors.aliyun.com/pypi/simple/ PyQtWebEngine
 pip install --index-url=https://mirrors.aliyun.com/pypi/simple/ pyinstaller
 pip install --index-url=https://mirrors.aliyun.com/pypi/simple/ FuzzyWuzzy
 pip install --index-url=https://mirrors.aliyun.com/pypi/simple/ python-levenshtein
+pip install --index-url=https://mirrors.aliyun.com/pypi/simple/ openai
 ```
 
 ### 运行
@@ -85,4 +87,3 @@ python main.py
 * Gitee:[https://gitee.com/REMOTE_CY](https://gitee.com/REMOTE_CY)
 * Github:[https://github.com/NianY2](https://github.com/NianY2)
 * GitCode[https://gitcode.com/qq_59636442](https://gitcode.com/qq_59636442)
-

@@ -45,8 +45,19 @@ MIN_AI_MATCH_VALUE = 80
 DEFAULT_REPLY = "我暂时听不懂这个问题耶，换个问题问我吧。"
 # DEFAULT_REPLY = "我暂时听不懂这个问题耶，可以主动添加这个问题的回答哦。"
 # 启动回复
-START_REPLY = """欢迎使用CYChatAi,我现在可以回答研学、旅游、美食、健康方面的问题。
-输入<strong class="text-question" onclick="sendMessage('代码模式')">代码模式</strong>可以让我进入代码模式。"""
+START_REPLY = """欢迎使用CYChatAi,当前为本地对话,我现在可以回答研学、旅游、美食、健康方面的问题。
+输入<strong class="text-question" onclick="sendMessage('代码模式')">代码模式</strong>可以让我进入代码模式。
+输入<strong class="text-question" onclick="sendMessage('讯飞大模型Lite版')">讯飞大模型Lite版</strong>可以让我进入联网模式(讯飞大模型Lite)。
+"""
+
+# 讯飞大模型启动回复
+XF_LITE_OPENAI_REPLY = """进入联网模式(讯飞大模型Lite版)成功。
+在联网模式下，输入<strong class="text-question" onclick="sendMessage('exit')">exit</strong>或<strong class="text-question" onclick="sendMessage('退出')">退出</strong>可以退出联网模式。
+<strong>注意：</strong>在联网模式下，可能会有一定的时间思考，请耐心等待。
+"""
+
+# 讯飞大模型退出回复
+XF_LITE_OPENAI_EXIT_REPLY = """退出联网模式成功。现在可以本地对话。"""
 
 # 代码模式启动回复
 CODE_REPLY = """进入代码模式成功，我目前支持执行<i>Python</i>代码。
