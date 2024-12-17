@@ -11,6 +11,11 @@
     <script src="./dist/qwebchannel.js"></script>
     <link rel="stylesheet" href="./global/typeit_cy/typeit_cy.css">
     <script src="./global/typeit_cy/typeit_cy.js"></script>
+    <style>
+        img{
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -200,7 +205,7 @@
             messageDiv.appendChild(messageSpan);
             messageContainer.appendChild(messageDiv);
             if (type == 'ai' && typeit_text) {
-               
+               if(text.length < 100){
                 typeit({
                     element: messageSpan,
                     strings: [text],
@@ -216,6 +221,10 @@
                         messageContainer.scrollTop = messageContainer.scrollHeight; // 滚动到底部
                     }
                 });
+               }else{
+                    messageSpan.innerHTML ="<pre class='content'>"+text+"</pre>" 
+                    messageContainer.scrollTop = messageContainer.scrollHeight; // 滚动到底部
+               }
             } else if(type == 'ai'){
                 messageSpan.innerHTML ="<pre class='content'>"+text+"</pre>" 
                 
